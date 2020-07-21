@@ -4,12 +4,13 @@ import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+import axios from '../../axios-orders';
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
   meat: 0.4,
   cheese: 1.3,
-  bacon: 0.7,
+  bacon: 0.7
 };
 
 class BurgerBuilder extends Component {
@@ -18,11 +19,11 @@ class BurgerBuilder extends Component {
       salad: 0,
       bacon: 0,
       cheese: 0,
-      meat: 0,
+      meat: 0
     },
     totalPrice: 4,
     purchasable: false,
-    purchasing: false,
+    purchasing: false
   };
 
   updatePurchaseState = (ingredients) => {
@@ -40,7 +41,7 @@ class BurgerBuilder extends Component {
     const oldCount = this.state.ingredients[type];
     const updatedCount = oldCount + 1;
     const updatedIngredients = {
-      ...this.state.ingredients,
+      ...this.state.ingredients
     };
     updatedIngredients[type] = updatedCount;
     const priceAddition = INGREDIENT_PRICES[type];
@@ -57,7 +58,7 @@ class BurgerBuilder extends Component {
     }
     const updatedCount = oldCount - 1;
     const updatedIngredients = {
-      ...this.state.ingredients,
+      ...this.state.ingredients
     };
     updatedIngredients[type] = updatedCount;
     const priceDeduction = INGREDIENT_PRICES[type];
@@ -76,12 +77,29 @@ class BurgerBuilder extends Component {
   };
 
   purchaseContinueHandler = () => {
-    alert('you continue');
+    const order = {
+      ingredients: this.state.ingredients,
+      price: this.state.totalPrice,
+      customer: {
+        name: 'Peter Kim',
+        address: {
+          street: '123 main street',
+          zipCode: '30135',
+          country: 'USA'
+        },
+        email: 'test@test.com'
+      },
+      deliveryMethod: 'fastest'
+    };
+    axios
+      .post('/orders.json', order)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   render() {
     const disabledInfo = {
-      ...this.state.ingredients,
+      ...this.state.ingredients
     };
 
     for (let key in disabledInfo) {
