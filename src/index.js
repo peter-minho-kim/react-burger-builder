@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
 });
 
 const store = createStore(
-  burgerBuilderReducer,
+  rootReducer,
   composeEnhancers(applyMiddleware(thunk))
 );
 
